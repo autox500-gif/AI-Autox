@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { WorkspaceState } from '../../services/workspace.state';
 import { BrandLogo } from '../brand-logo/brand-logo';
@@ -116,22 +116,28 @@ import { GraphicItem } from '../../models/workspace.types';
           <div class="flex-1 flex flex-col pt-2 border-t border-[#333333]">
             <span class="text-[11px] font-semibold uppercase text-[#888888] tracking-wider block mb-2">Recent Generations</span>
             <div class="space-y-2 overflow-y-auto">
-              @for (item of state.graphicsGallery(); track item.id) {
-                <button
-                  type="button"
-                  (click)="previewItem.set(item)"
-                  class="w-full text-left p-2 rounded-[12px] bg-[#262626] border border-[#333333] hover:border-[#444444] transition-all cursor-pointer flex items-center gap-2.5"
-                >
-                  <img [src]="item.imageUrl" alt="Preview" class="w-10 h-10 rounded-[8px] object-cover bg-neutral-800 shrink-0" />
-                  <div class="min-w-0 flex-1">
-                    <p class="text-[11px] text-[#F5F5F5] truncate">{{ item.prompt }}</p>
-                    <div class="flex items-center gap-2 text-[10px] text-[#888888]">
-                      <span>{{ item.aspectRatio }}</span>
-                      <span>•</span>
-                      <span>{{ item.timestamp }}</span>
+              @if (state.graphicsGallery().length > 0) {
+                @for (item of state.graphicsGallery(); track item.id) {
+                  <button
+                    type="button"
+                    (click)="previewItem.set(item)"
+                    class="w-full text-left p-2 rounded-[12px] bg-[#262626] border border-[#333333] hover:border-[#444444] transition-all cursor-pointer flex items-center gap-2.5"
+                  >
+                    <img [src]="item.imageUrl" alt="Preview" class="w-10 h-10 rounded-[8px] object-cover bg-neutral-800 shrink-0" />
+                    <div class="min-w-0 flex-1">
+                      <p class="text-[11px] text-[#F5F5F5] truncate">{{ item.prompt }}</p>
+                      <div class="flex items-center gap-2 text-[10px] text-[#888888]">
+                        <span>{{ item.aspectRatio }}</span>
+                        <span>•</span>
+                        <span>{{ item.timestamp }}</span>
+                      </div>
                     </div>
-                  </div>
-                </button>
+                  </button>
+                }
+              } @else {
+                <div class="p-4 rounded-[12px] bg-[#262626]/40 border border-[#333333] text-center text-[11px] text-[#777777]">
+                  No images generated yet
+                </div>
               }
             </div>
           </div>
@@ -149,28 +155,40 @@ import { GraphicItem } from '../../models/workspace.types';
           
           <!-- Active Hero Canvas Area -->
           <div class="relative w-full rounded-[24px] border border-dashed border-[#3D3D3D] bg-[#1C1C1C] p-6 flex flex-col items-center justify-center min-h-[380px] shadow-2xl overflow-hidden group">
-            <div class="relative max-w-[640px] w-full rounded-[16px] overflow-hidden shadow-2xl border border-[#333333] bg-[#121212]">
-              <img
-                [src]="previewItem().imageUrl"
-                alt="Active Render"
-                class="w-full h-auto max-h-[460px] object-contain mx-auto"
-              />
-              <div class="p-4 bg-[#1E1E1E] border-t border-[#2B2B2B] flex items-center justify-between">
-                <div>
-                  <h4 class="text-[13px] font-medium text-white truncate max-w-[360px]">{{ previewItem().prompt }}</h4>
-                  <p class="text-[11px] text-[#888888]">{{ previewItem().style }} • {{ previewItem().aspectRatio }}</p>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button
-                    (click)="downloadImage(previewItem())"
-                    class="h-[32px] px-3 rounded-[8px] bg-[#2B2B2B] hover:bg-[#383838] border border-[#3D3D3D] text-[11px] text-white flex items-center gap-1.5 transition-all cursor-pointer"
-                  >
-                    <mat-icon class="!w-3.5 !h-3.5 !text-[14px]">download</mat-icon>
-                    <span>Download</span>
-                  </button>
+            @if (activeItem(); as current) {
+              <div class="relative max-w-[640px] w-full rounded-[16px] overflow-hidden shadow-2xl border border-[#333333] bg-[#121212]">
+                <img
+                  [src]="current.imageUrl"
+                  alt="Active Render"
+                  class="w-full h-auto max-h-[460px] object-contain mx-auto"
+                />
+                <div class="p-4 bg-[#1E1E1E] border-t border-[#2B2B2B] flex items-center justify-between">
+                  <div>
+                    <h4 class="text-[13px] font-medium text-white truncate max-w-[360px]">{{ current.prompt }}</h4>
+                    <p class="text-[11px] text-[#888888]">{{ current.style }} • {{ current.aspectRatio }}</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button
+                      (click)="downloadImage(current)"
+                      class="h-[32px] px-3 rounded-[8px] bg-[#2B2B2B] hover:bg-[#383838] border border-[#3D3D3D] text-[11px] text-white flex items-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <mat-icon class="!w-3.5 !h-3.5 !text-[14px]">download</mat-icon>
+                      <span>Download</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            } @else {
+              <div class="flex flex-col items-center justify-center text-center p-8 max-w-md">
+                <div class="w-16 h-16 rounded-2xl bg-[#252525] border border-[#383838] flex items-center justify-center text-[#888888] mb-4">
+                  <mat-icon class="!w-8 !h-8 !text-[32px]">image</mat-icon>
+                </div>
+                <h3 class="text-base font-medium text-white mb-1.5">No Graphic Rendered Yet</h3>
+                <p class="text-xs text-[#888888] leading-relaxed">
+                  Enter a prompt in the left sidebar and click "Generate" to create your visual asset.
+                </p>
+              </div>
+            }
           </div>
 
           <!-- Gallery Grid with Hover Actions -->
@@ -180,40 +198,46 @@ import { GraphicItem } from '../../models/workspace.types';
               <span class="text-[12px] text-[#888888]">{{ state.graphicsGallery().length }} Items Rendered</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              @for (item of state.graphicsGallery(); track item.id) {
-                <div
-                  class="group relative rounded-[16px] overflow-hidden bg-[#242424] border border-[#333333] hover:border-[#555555] transition-all cursor-pointer shadow-lg"
-                >
-                  <img [src]="item.imageUrl" alt="Gallery" class="w-full aspect-video object-cover bg-neutral-900 group-hover:scale-105 transition-transform duration-300" />
-                  
-                  <div class="p-3 bg-[#1F1F1F]">
-                    <p class="text-[12px] font-medium text-[#F5F5F5] truncate">{{ item.prompt }}</p>
-                    <p class="text-[10px] text-[#888888] mt-0.5">{{ item.style }}</p>
-                  </div>
+            @if (state.graphicsGallery().length > 0) {
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                @for (item of state.graphicsGallery(); track item.id) {
+                  <div
+                    class="group relative rounded-[16px] overflow-hidden bg-[#242424] border border-[#333333] hover:border-[#555555] transition-all cursor-pointer shadow-lg"
+                  >
+                    <img [src]="item.imageUrl" alt="Gallery" class="w-full aspect-video object-cover bg-neutral-900 group-hover:scale-105 transition-transform duration-300" />
+                    
+                    <div class="p-3 bg-[#1F1F1F]">
+                      <p class="text-[12px] font-medium text-[#F5F5F5] truncate">{{ item.prompt }}</p>
+                      <p class="text-[10px] text-[#888888] mt-0.5">{{ item.style }}</p>
+                    </div>
 
-                  <!-- Hover overlay action -->
-                  <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                    <button
-                      type="button"
-                      (click)="downloadImage(item)"
-                      class="w-9 h-9 rounded-full bg-white/90 hover:bg-white text-black flex items-center justify-center shadow-lg transition-transform active:scale-95"
-                      title="Download image"
-                    >
-                      <mat-icon class="!w-4 !h-4 !text-[18px]">download</mat-icon>
-                    </button>
-                    <button
-                      type="button"
-                      (click)="previewItem.set(item)"
-                      class="w-9 h-9 rounded-full bg-[#2B2B2B] hover:bg-[#383838] text-white border border-[#444] flex items-center justify-center shadow-lg transition-transform active:scale-95"
-                      title="Inspect full-size"
-                    >
-                      <mat-icon class="!w-4 !h-4 !text-[18px]">zoom_in</mat-icon>
-                    </button>
+                    <!-- Hover overlay action -->
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                      <button
+                        type="button"
+                        (click)="downloadImage(item)"
+                        class="w-9 h-9 rounded-full bg-white/90 hover:bg-white text-black flex items-center justify-center shadow-lg transition-transform active:scale-95"
+                        title="Download image"
+                      >
+                        <mat-icon class="!w-4 !h-4 !text-[18px]">download</mat-icon>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="previewItem.set(item)"
+                        class="w-9 h-9 rounded-full bg-[#2B2B2B] hover:bg-[#383838] text-white border border-[#444] flex items-center justify-center shadow-lg transition-transform active:scale-95"
+                        title="Inspect full-size"
+                      >
+                        <mat-icon class="!w-4 !h-4 !text-[18px]">zoom_in</mat-icon>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              }
-            </div>
+                }
+              </div>
+            } @else {
+              <div class="p-10 rounded-[16px] bg-[#1C1C1C] border border-[#2D2D2D] text-center text-xs text-[#888888]">
+                Your rendered graphics and brand showcase items will appear here.
+              </div>
+            }
           </div>
 
         </main>
@@ -224,7 +248,11 @@ import { GraphicItem } from '../../models/workspace.types';
 })
 export class GraphicsWorkspace {
   readonly state = inject(WorkspaceState);
-  readonly previewItem = signal<GraphicItem>(this.state.graphicsGallery()[0]);
+  readonly previewItem = signal<GraphicItem | null>(null);
+
+  readonly activeItem = computed(() => {
+    return this.previewItem() || this.state.graphicsGallery()[0] || null;
+  });
 
   readonly aspectRatios: ('1:1' | '16:9' | '9:16' | '4:3')[] = ['1:1', '16:9', '9:16', '4:3'];
   readonly styles = [

@@ -62,6 +62,33 @@ export interface DbSchemaTable {
   columns: { name: string; type: string; isPrimary?: boolean; isNullable?: boolean }[];
 }
 
+export interface CrmDeal {
+  id: string;
+  name: string;
+  company: string;
+  stage: string;
+  value: string;
+  notes?: string;
+}
+
+export interface LeadItem {
+  id: string;
+  name: string;
+  company: string;
+  title: string;
+  email: string;
+  score: number;
+  status: string;
+}
+
+export interface PostItem {
+  id: string;
+  platform: 'X / Twitter' | 'LinkedIn' | 'Instagram';
+  content: string;
+  status: 'Draft' | 'Scheduled' | 'Published';
+  timestamp: string;
+}
+
 export interface GraphicItem {
   id: string;
   prompt: string;

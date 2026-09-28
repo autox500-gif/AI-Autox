@@ -49,7 +49,7 @@ import { BrandLogo } from '../brand-logo/brand-logo';
                     id="onboarding-full-name"
                     type="text"
                     formControlName="fullName"
-                    placeholder="Prathamesh"
+                    placeholder="Enter your name"
                     class="w-full h-[44px] px-3.5 rounded-[12px] bg-[#222222] border border-[#3D3D3D] text-[13px] text-[#F5F5F5] placeholder-[#666666] outline-none focus:border-[#777777] transition-colors"
                   />
                 </div>
@@ -60,7 +60,7 @@ import { BrandLogo } from '../brand-logo/brand-logo';
                     id="onboarding-email"
                     type="email"
                     formControlName="email"
-                    placeholder="autox500@gmail.com"
+                    placeholder="name@company.com"
                     class="w-full h-[44px] px-3.5 rounded-[12px] bg-[#222222] border border-[#3D3D3D] text-[13px] text-[#F5F5F5] placeholder-[#666666] outline-none focus:border-[#777777] transition-colors"
                   />
                 </div>
@@ -71,7 +71,7 @@ import { BrandLogo } from '../brand-logo/brand-logo';
                     id="onboarding-password"
                     type="password"
                     formControlName="password"
-                    placeholder="••••••••••••"
+                    placeholder="Create password"
                     class="w-full h-[44px] px-3.5 rounded-[12px] bg-[#222222] border border-[#3D3D3D] text-[13px] text-[#F5F5F5] placeholder-[#666666] outline-none focus:border-[#777777] transition-colors"
                   />
                 </div>
@@ -192,9 +192,18 @@ import { BrandLogo } from '../brand-logo/brand-logo';
               <p class="text-[13px] text-center text-[#BDBDBD] mb-6">Review terms and launch your AI Business Workspace.</p>
 
               <div class="p-4 rounded-[16px] bg-[#242424] border border-[#3D3D3D] space-y-2 mb-6 text-[12px] text-[#BDBDBD]">
-                <p>✔ Autonomous AI engine calibrated for high-throughput business creation</p>
-                <p>✔ Realtime voice caller and lead qualification ready</p>
-                <p>✔ Full-stack web and code export privileges granted</p>
+                <div class="flex items-center gap-2">
+                  <mat-icon class="!w-3.5 !h-3.5 !text-[14px] text-emerald-400 shrink-0">check</mat-icon>
+                  <span>Autonomous AI engine calibrated for high-throughput business creation</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <mat-icon class="!w-3.5 !h-3.5 !text-[14px] text-emerald-400 shrink-0">check</mat-icon>
+                  <span>Realtime voice caller and lead qualification ready</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <mat-icon class="!w-3.5 !h-3.5 !text-[14px] text-emerald-400 shrink-0">check</mat-icon>
+                  <span>Full-stack web and code export privileges granted</span>
+                </div>
               </div>
 
               <label class="flex items-start gap-3 p-2 rounded-xl hover:bg-[#252525] cursor-pointer mb-6 transition-colors">
@@ -240,9 +249,9 @@ export class OnboardingModal {
   readonly state = inject(WorkspaceState);
 
   readonly authForm = new FormGroup({
-    fullName: new FormControl('Prathamesh', { nonNullable: true, validators: [Validators.required] }),
-    email: new FormControl('autox500@gmail.com', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-    password: new FormControl('••••••••••••', { nonNullable: true, validators: [Validators.required] })
+    fullName: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] })
   });
 
   readonly micEnabled = signal<boolean>(true);
@@ -256,6 +265,13 @@ export class OnboardingModal {
 
   finishOnboarding() {
     if (!this.termsAccepted()) return;
+    const formVal = this.authForm.getRawValue();
+    if (formVal.fullName.trim()) {
+      this.state.userName.set(formVal.fullName.trim());
+    }
+    if (formVal.email.trim()) {
+      this.state.userEmail.set(formVal.email.trim());
+    }
     this.state.showToast('Workspace initialized! Welcome to AutoX.');
     this.state.closeOnboardingModal();
   }

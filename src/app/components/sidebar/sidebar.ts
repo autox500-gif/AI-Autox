@@ -198,32 +198,39 @@ import { ToolItem } from '../../models/workspace.types';
             </div>
             
             <div class="flex-1 overflow-y-auto space-y-1 pr-1">
-              @for (chat of state.chatHistory(); track chat.id) {
-                <div
-                  class="group w-full px-2.5 py-2 rounded-[12px] hover:bg-[#2B2B2B] flex items-center justify-between transition-colors text-left"
-                >
-                  <button
-                    type="button"
-                    (click)="state.loadChatSession(chat)"
-                    class="flex items-center gap-2 min-w-0 flex-1 text-left cursor-pointer focus:outline-none"
+              @if (state.chatHistory().length > 0) {
+                @for (chat of state.chatHistory(); track chat.id) {
+                  <div
+                    class="group w-full px-2.5 py-2 rounded-[12px] hover:bg-[#2B2B2B] flex items-center justify-between transition-colors text-left"
                   >
-                    <mat-icon class="!w-4 !h-4 !text-[16px] text-[#888888] group-hover:text-[#BDBDBD] shrink-0">
-                      chat_bubble_outline
-                    </mat-icon>
-                    <div class="min-w-0">
-                      <p class="text-[12px] font-medium text-[#E5E5E5] truncate">{{ chat.title }}</p>
-                      <p class="text-[10px] text-[#888888]">{{ chat.timestamp }}</p>
-                    </div>
-                  </button>
-                  
-                  <button
-                    type="button"
-                    (click)="state.deleteChatSession(chat.id, $event)"
-                    class="opacity-0 group-hover:opacity-100 p-1 text-[#888888] hover:text-rose-400 transition-opacity cursor-pointer"
-                    title="Delete session"
-                  >
-                    <mat-icon class="!w-3.5 !h-3.5 !text-[14px]">delete</mat-icon>
-                  </button>
+                    <button
+                      type="button"
+                      (click)="state.loadChatSession(chat)"
+                      class="flex items-center gap-2 min-w-0 flex-1 text-left cursor-pointer focus:outline-none"
+                    >
+                      <mat-icon class="!w-4 !h-4 !text-[16px] text-[#888888] group-hover:text-[#BDBDBD] shrink-0">
+                        chat_bubble_outline
+                      </mat-icon>
+                      <div class="min-w-0">
+                        <p class="text-[12px] font-medium text-[#E5E5E5] truncate">{{ chat.title }}</p>
+                        <p class="text-[10px] text-[#888888]">{{ chat.timestamp }}</p>
+                      </div>
+                    </button>
+                    
+                    <button
+                      type="button"
+                      (click)="state.deleteChatSession(chat.id, $event)"
+                      class="opacity-0 group-hover:opacity-100 p-1 text-[#888888] hover:text-rose-400 transition-opacity cursor-pointer"
+                      title="Delete session"
+                    >
+                      <mat-icon class="!w-3.5 !h-3.5 !text-[14px]">delete</mat-icon>
+                    </button>
+                  </div>
+                }
+              } @else {
+                <div class="py-8 px-2 text-center text-[11px] text-[#777777]">
+                  <mat-icon class="!w-4 !h-4 !text-[16px] text-[#555555] mx-auto mb-1">chat_bubble_outline</mat-icon>
+                  <span>No recent chats</span>
                 </div>
               }
             </div>
@@ -232,7 +239,6 @@ import { ToolItem } from '../../models/workspace.types';
       }
 
       <!-- ================= Bottom Profile Zone ================= -->
-      <!-- Avatar circle 36px, username "Prathamesh", settings gear 18px -->
       <div class="h-[68px] px-3.5 flex items-center shrink-0 border-t border-[#333333]/80 bg-[#1A1A1A]/60"
            [class.justify-center]="state.isSidebarCollapsed()"
            [class.justify-between]="!state.isSidebarCollapsed()"
@@ -242,15 +248,15 @@ import { ToolItem } from '../../models/workspace.types';
           class="flex items-center gap-2.5 group cursor-pointer focus:outline-none"
           title="Account Profile"
         >
-          <!-- 36px avatar circle with initials or photo -->
+          <!-- Avatar circle with initials -->
           <div class="w-[36px] h-[36px] rounded-full bg-gradient-to-tr from-neutral-700 to-neutral-500 border border-[#444444] flex items-center justify-center font-semibold text-white text-[13px] shadow-sm">
-            P
+            {{ state.userName().charAt(0).toUpperCase() || 'U' }}
           </div>
 
           @if (!state.isSidebarCollapsed()) {
             <div class="flex flex-col text-left">
-              <span class="text-[13px] font-medium text-[#F5F5F5] group-hover:text-white transition-colors">Prathamesh</span>
-              <span class="text-[11px] text-[#888888]">Pro Account</span>
+              <span class="text-[13px] font-medium text-[#F5F5F5] group-hover:text-white transition-colors">{{ state.userName() }}</span>
+              <span class="text-[11px] text-[#888888]">{{ state.userPlan() }}</span>
             </div>
           }
         </button>
@@ -325,9 +331,9 @@ import { ToolItem } from '../../models/workspace.types';
         <div class="h-[64px] px-5 flex items-center justify-between border-t border-[#333333] bg-[#1F1F1F]">
           <div class="flex items-center gap-3">
             <div class="w-[34px] h-[34px] rounded-full bg-neutral-700 flex items-center justify-center font-bold text-white text-xs">
-              P
+              {{ state.userName().charAt(0).toUpperCase() || 'U' }}
             </div>
-            <span class="text-[13px] font-medium text-[#F5F5F5]">Prathamesh</span>
+            <span class="text-[13px] font-medium text-[#F5F5F5]">{{ state.userName() }}</span>
           </div>
           <button
             (click)="state.openUpgradeModal()"

@@ -176,21 +176,24 @@ import { ToolItem } from '../../models/workspace.types';
       <div class="flex flex-wrap items-center justify-center gap-2 mt-8 max-w-[700px] text-center">
         <button
           (click)="setPrompt('Build a luxury dark-mode e-commerce brand for modern electric vehicles')"
-          class="px-3.5 py-1.5 rounded-full bg-[#252525]/80 hover:bg-[#2B2B2B] border border-[#333333] hover:border-[#444444] text-[12px] text-[#BDBDBD] hover:text-white transition-all cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#252525]/80 hover:bg-[#2B2B2B] border border-[#333333] hover:border-[#444444] text-[12px] text-[#BDBDBD] hover:text-white transition-all cursor-pointer"
         >
-          ⚡ E-Commerce Storefront
+          <mat-icon class="!w-3.5 !h-3.5 !text-[14px] text-amber-400">bolt</mat-icon>
+          <span>E-Commerce Storefront</span>
         </button>
         <button
           (click)="setPrompt('Generate photorealistic 3D titanium brand graphics and packaging')"
-          class="px-3.5 py-1.5 rounded-full bg-[#252525]/80 hover:bg-[#2B2B2B] border border-[#333333] hover:border-[#444444] text-[12px] text-[#BDBDBD] hover:text-white transition-all cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#252525]/80 hover:bg-[#2B2B2B] border border-[#333333] hover:border-[#444444] text-[12px] text-[#BDBDBD] hover:text-white transition-all cursor-pointer"
         >
-          🎨 3D Brand Graphics
+          <mat-icon class="!w-3.5 !h-3.5 !text-[14px] text-orange-400">palette</mat-icon>
+          <span>3D Brand Graphics</span>
         </button>
         <button
           (click)="setPrompt('Deploy automated AI B2B Lead qualification pipeline and Caller')"
-          class="px-3.5 py-1.5 rounded-full bg-[#252525]/80 hover:bg-[#2B2B2B] border border-[#333333] hover:border-[#444444] text-[12px] text-[#BDBDBD] hover:text-white transition-all cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#252525]/80 hover:bg-[#2B2B2B] border border-[#333333] hover:border-[#444444] text-[12px] text-[#BDBDBD] hover:text-white transition-all cursor-pointer"
         >
-          🎯 Auto Leads & Caller
+          <mat-icon class="!w-3.5 !h-3.5 !text-[14px] text-sky-400">track_changes</mat-icon>
+          <span>Auto Leads & Caller</span>
         </button>
       </div>
 

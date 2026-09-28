@@ -1,0 +1,6 @@
+{
+  "name": "AutoX - AI Business Workspace",
+  "description": "Minimalist, responsive dark-themed AI Business Workspace for online business creation, graphics, web design, CRM, leads, and automation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

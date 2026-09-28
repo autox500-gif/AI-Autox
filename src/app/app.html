@@ -1,0 +1,54 @@
+<div class="min-h-screen bg-[#1F1F1F] text-[#F5F5F5] font-sans antialiased relative overflow-x-hidden">
+  
+  <!-- ================= VIEW 1: MAIN LANDING VIEW ================= -->
+  @if (state.currentView() === 'main') {
+    <!-- Main Top Header -->
+    <app-header />
+
+    <!-- Center Hero & Prompt Box Container -->
+    <!-- On desktop, compensate for the right sidebar so the prompt box is visually centered -->
+    <main
+      [class.md:pr-[76px]]="state.isSidebarCollapsed()"
+      [class.md:pr-[280px]]="!state.isSidebarCollapsed()"
+      class="min-h-screen flex items-center justify-center transition-all duration-300 relative z-10"
+    >
+      <app-prompt-box />
+    </main>
+
+    <!-- Right Sidebar & Mobile Drawer -->
+    <app-sidebar />
+  }
+
+  <!-- ================= VIEW 2: WEB WORKSPACE ================= -->
+  @if (state.currentView() === 'web') {
+    <app-web-workspace />
+  }
+
+  <!-- ================= VIEW 3: GRAPHICS WORKSPACE ================= -->
+  @if (state.currentView() === 'graphics') {
+    <app-graphics-workspace />
+  }
+
+  <!-- ================= VIEW 4: BUSINESS SUITE (CRM, LEADS, CALLER, ETC.) ================= -->
+  @if (state.currentView() === 'crm' || state.currentView() === 'leads' || state.currentView() === 'caller' || state.currentView() === 'reply' || state.currentView() === 'email' || state.currentView() === 'posts' || state.currentView() === 'network' || state.currentView() === 'connect') {
+    <app-business-suite />
+  }
+
+  <!-- ================= MODALS ================= -->
+  <!-- Upgrade Modal -->
+  <app-upgrade-modal />
+
+  <!-- Onboarding Modal -->
+  <app-onboarding-modal />
+
+  <!-- ================= FLOATING TOAST NOTIFICATION ================= -->
+  @if (state.toastMessage()) {
+    <div
+      class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full bg-[#2B2B2B] border border-[#444444] text-[#F5F5F5] text-[13px] font-medium shadow-2xl flex items-center gap-2.5 animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-none"
+    >
+      <mat-icon class="!w-4 !h-4 !text-[16px] text-amber-400">info</mat-icon>
+      <span>{{ state.toastMessage() }}</span>
+    </div>
+  }
+
+</div>
